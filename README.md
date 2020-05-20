@@ -6,7 +6,7 @@
 **Oracle-on-Kubernets** has been tested on MicroK8s but should also work with other Kubernetes distributions.
 
 
-## Oracle On Kubernetes Database Features
+## Oracle Database Features
 1. Create Oracle 12c, 18c 18c(XE), 19c Database
 1. Stop / Start Databases
 1. Relocate / Move Databases
