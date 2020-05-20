@@ -1,0 +1,52 @@
+---
+### Oracle 19c NFS
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ora-data193-nfs
+  namespace: oracle-namespace
+  labels:
+    app: database
+    version: 19.3.0.1
+spec:
+  storageClassName: pure-file
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+     storage: 20Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ora-startup193-nfs
+  namespace: oracle-namespace
+  labels:
+    app: database
+    version: 19.3.0.1
+spec:
+  storageClassName: pure-file
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+     storage: 1Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ora-setup193-nfs
+  namespace: oracle-namespace
+  labels:
+    app: database
+    version: 19.3.0.1
+spec:
+  storageClassName: pure-file
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+     storage: 1Gi

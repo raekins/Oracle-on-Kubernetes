@@ -1,0 +1,17 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ora-data193-clone
+  namespace: oracle-namespace
+spec:
+  storageClassName: pure-block
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  dataSource:
+    kind: VolumeSnapshot
+    name: ora-data193-snap
+    apiGroup: snapshot.storage.k8s.io

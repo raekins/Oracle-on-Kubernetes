@@ -1,0 +1,164 @@
+---
+### Oracle 12c
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ora-orcl
+  namespace: oracle-namespace
+  labels:
+    app: database
+    version: 12.2.0.1
+spec:
+  storageClassName: pure-block
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+     storage: 20Gi
+---
+### Oracle 18c
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ora-data183
+  namespace: oracle-namespace
+  labels:
+    app: database
+    version: 18.3.0.1
+spec:
+  storageClassName: pure-block
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+     storage: 20Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ora-startup183
+  namespace: oracle-namespace
+  labels:
+    app: database
+    version: 18.3.0.1
+spec:
+  storageClassName: pure-block
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+     storage: 1Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ora-setup183
+  namespace: oracle-namespace
+  labels:
+    app: database
+    version: 18.3.0.1
+spec:
+  storageClassName: pure-block
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+     storage: 1Gi
+---
+### Oracle 18cXE
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ora-data184-xe
+  namespace: oracle-namespace
+  labels:
+    app: database
+    version: 18.4.0.1
+spec:
+  storageClassName: pure-block
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+     storage: 20Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ora-startup184-xe
+  namespace: oracle-namespace
+  labels:
+    app: database
+    version: 18.4.0.1
+spec:
+  storageClassName: pure-block
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+     storage: 1Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ora-setup184-xe
+  namespace: oracle-namespace
+  labels:
+    app: database
+    version: 18.4.0.1
+spec:
+  storageClassName: pure-block
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+     storage: 1Gi
+---
+### Oracle 19c
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ora-data193
+  namespace: oracle-namespace
+  labels:
+    app: database
+    version: 19.3.0.1
+spec:
+  storageClassName: pure-block
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+     storage: 20Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ora-startup193
+  namespace: oracle-namespace
+  labels:
+    app: database
+    version: 19.3.0.1
+spec:
+  storageClassName: pure-block
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+     storage: 1Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ora-setup193
+  namespace: oracle-namespace
+  labels:
+    app: database
+    version: 19.3.0.1
+spec:
+  storageClassName: pure-block
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+     storage: 1Gi
