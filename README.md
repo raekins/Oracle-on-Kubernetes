@@ -1,13 +1,13 @@
 # Oracle-on-Kubernetes
-**Oracle-On-Kunernetes** is a collection of example Kubernetes Manifest files utilising the Pure Service Orchestrator (PSO) CSI Driver to provide persistent storage  
+**Oracle-On-Kunernetes** is a collection of example Kubernetes Manifest files utilising the Pure Service Orchestrator (PSO) CSI Driver to provide persistent Block or File (NFS) storgae to Oracle Databases containers.
 
 
 ## Kubernetes Environment
-**Oracle-on-Kubernets** has been tested on MicroK8s but should also work with other Kubernetes distrributions.
+**Oracle-on-Kubernets** has been tested on MicroK8s but should also work with other Kubernetes distributions.
 
 
-### Oracle On Kubernetes Database Features
-1. Create Oracle 12c, 18c 18c(XE), 19c
+## Oracle On Kubernetes Database Features
+1. Create Oracle 12c, 18c 18c(XE), 19c Database
 1. Stop / Start Databases
 1. Relocate / Move Databases
 
@@ -16,7 +16,7 @@
 1. Create a Kubernetes Cluster using preffered distribution e.g MicroK8s
 1. Download required Oracle Database ZIP files from OTN, a valid OTN account and licences will be requrired.
 1. Pull this Repo
-1. Vist my Blog and read Oracle on Kubernetes posts 
+1. Vist my Blog and read relevant Oracle on Kubernetes posts 
 
 ### Examples
 `
@@ -27,7 +27,7 @@ $ kubectl apply -f <mainfest>.yaml -n oracle-namespace
 
 Ron Ekins, Oracle Solutions Architect at Pure Storage
 
-##Oracle ACE Director##
+Oracle ACE Director
 
 @ronekins
 
@@ -40,14 +40,14 @@ Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 
 ## Link(s)
 
-[Creating Kubernetes Images from Docker Images] (https://ronekins.com/2020/05/14/how-to-use-oracle-database-docker-images-with-kubernetes/)
+Using Oracle Docker Images (https://ronekins.com/2020/05/14/how-to-use-oracle-database-docker-images-with-kubernetes/)
 
-[Oracle 19c on NFS] (https://ronekins.com/2020/05/19/oracle-19c-on-kubernetes-using-nfs-persistent-storage/)
+Oracle 19c on NFS (https://ronekins.com/2020/05/19/oracle-19c-on-kubernetes-using-nfs-persistent-storage/)
 
-[Oracle 19c on Block] (https://ronekins.com/2020/05/13/running-oracle-19c-on-kubernetes/)
+Oracle 19c on Block (https://ronekins.com/2020/05/13/running-oracle-19c-on-kubernetes/)
 
-[Oracle OTN] (https://www.oracle.com/downloads/#category-database)
+Oracle OTN (https://www.oracle.com/downloads/#category-database)
 
-[Oracle Docker GitHub Repo] (https://github.com/oracle/docker-images)
+Oracle Docker GitHub Repo (https://github.com/oracle/docker-images)
 
-[MicroK8s] (https://microk8s.io)
+MicroK8s (https://microk8s.io)
