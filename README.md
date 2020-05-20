@@ -1,5 +1,5 @@
 # Oracle-on-Kubernetes
-**Oracle-On-Kunernetes** is a collection of example Kubernetes Manifest files utilising the Pure Service Orchestrator (PSO) CSI Driver to provide persistent Block or File (NFS) storage to Oracle Databases containers.
+**Oracle-On-Kunernetes** is a collection of example Kubernetes Manifest files utilising the Pure Service Orchestrator (PSO) Container Storage Interface (CSI) Driver to provide persistent Block or File (NFS) storage to Oracle Databases containers.
 
 
 ## Kubernetes Environment
@@ -51,3 +51,5 @@ Oracle OTN (https://www.oracle.com/downloads/#category-database)
 Oracle Docker GitHub Repo (https://github.com/oracle/docker-images)
 
 MicroK8s (https://microk8s.io)
+
+Kubernetes CSI Docs (https://kubernetes-csi.github.io/docs/)
