@@ -1,0 +1,19 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ora-data183-clone
+  namespace: oracle-namespace
+  labels:
+    app: database
+    version: 18.3.0.1
+spec:
+  storageClassName: pure-block
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  dataSource:
+    kind: PersistentVolumeClaim 
+    name: ora-data183
