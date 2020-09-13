@@ -1,0 +1,88 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: test-pvc01
+  labels:
+    app: test-app
+spec:
+  storageClassName: pure-file
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: test-pvc02
+  labels:
+    app: test-app
+spec:
+  storageClassName: pure-block
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: test-pvc03
+  labels:
+    app: test-app
+spec:
+  storageClassName: pure-block
+  volumeMode: Block
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 3Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-deployment
+  labels:
+    app: test-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-app
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: test-app
+
+    spec:
+      containers:
+        - name: test-container
+          image: nginx
+          ports:
+            - containerPort: 80
+              name: "http-server"
+          volumeMounts:
+            - mountPath: "/usr/share/nginx/html"
+              name: test-pv01
+            - mountPath: "/u01"
+              name: test-pv02
+          volumeDevices:
+            - devicePath: /dev/pure-block-device
+              name: test-pv03
+      volumes:
+        - name: test-pv01
+          persistentVolumeClaim:
+            claimName: test-pvc01
+        - name: test-pv02
+          persistentVolumeClaim:
+            claimName: test-pvc02
+        - name: test-pv03
+          persistentVolumeClaim:
+            claimName: test-pvc03
