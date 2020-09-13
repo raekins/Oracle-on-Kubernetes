@@ -1,0 +1,138 @@
+# Default values for csi-plugin.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  name: purestorage/k8s
+  tag: 5.2.0
+  pullPolicy: Always
+
+csi:
+  provisioner:
+    image:
+      name: quay.io/k8scsi/csi-provisioner
+      pullPolicy: Always
+  snapshotter:
+    image:
+      name: quay.io/k8scsi/csi-snapshotter
+      pullPolicy: Always
+  resizer:
+    image:
+      name: quay.io/k8scsi/csi-resizer
+      pullPolicy: Always
+  clusterDriverRegistrar:
+    image:
+      name: quay.io/k8scsi/csi-cluster-driver-registrar
+      pullPolicy: Always
+  nodeDriverRegistrar:
+    image:
+      name: quay.io/k8scsi/csi-node-driver-registrar
+      pullPolicy: Always
+  livenessProbe:
+    image:
+      name: quay.io/k8scsi/livenessprobe
+      pullPolicy: Always
+
+# this option is to enable/disable the csi topology feature
+# for pure-csi-driver
+storagetopology:
+  enable: false
+  strictTopology: false
+
+
+# this option is to enable/disable the debug mode of this app
+# for pure-csi-driver
+app:
+  debug: false
+
+# do you want to set pure as the default storageclass?
+storageclass:
+  # create the built-in StorageClasses 'pure', 'pure-file' and 'pure-block'?
+  createBuiltIn: true
+  isPureDefault: false
+  # set the type of backend you want for the 'pure' storageclass
+  pureBackend: block
+
+# specify the service account name for this app
+clusterrolebinding:
+  serviceAccount:
+    name: pure
+
+# support ISCSI or FC, not case sensitive
+flasharray:
+  sanType: ISCSI
+  defaultFSType: xfs
+  defaultFSOpt: "-q"
+  defaultMountOpt:
+    - discard
+  preemptAttachments: "true"
+  iSCSILoginTimeout: 20
+  iSCSIAllowedCIDR: "192.168.99.0/24"
+
+flashblade:
+  snapshotDirectoryEnabled: "false"
+
+# there are two namespaces for this app
+# 1. namespace.pure is the backend storage namespace where volumes/shares/etc
+#    will be created.
+namespace:
+  pure: rek8s
+
+# support k8s or openshift
+orchestrator:
+  # name is either 'k8s' or 'openshift'
+  name: k8s
+  # Use this to specify the base path of Kubelet. It should contain the "plugins", "plugins_registry", and "pods" directories.
+  # Default is /var/lib/kubelet. For CoreOS and Rancher, this is usually /opt/rke/var/lib/kubelet unless configured otherwise.
+  basePath: /var/lib/kubelet
+
+# arrays specify what storage arrays should be managed by the plugin, this is
+# required to be set upon installation. For FlashArrays you must set the "MgmtEndPoint"
+# and "APIToken", and for FlashBlades you need the additional "NfsEndPoint" parameter.
+# The labels are optional, and can be any key-value pair for use with the "fleet"
+# provisioner. An example is shown below:
+arrays:
+   FlashArrays:
+     - MgmtEndPoint: "192.168.56.100"
+       APIToken: "cb1955a6-6009-8cfa-d7f0-813e7010d850"
+       Labels:
+         topology.purestorage.com/rack: "mbp"
+         topology.purestorage.com/env: "lab"
+
+mounter:
+  # These values map directly to yaml in the daemonset spec, see the kubernetes docs for info
+  nodeSelector: {}
+    # disktype: ssd
+  # These values map directly to yaml in the daemonset spec, see the kubernetes docs for info
+  tolerations: []
+    # - operator: Exists
+  # These values map directly to yaml in the daemonset spec, see the kubernetes docs for info
+  affinity: {}
+    # nodeAffinity:
+    #   requiredDuringSchedulingIgnoredDuringExecution:
+    #     nodeSelectorTerms:
+    #     - matchExpressions:
+    #       - key: e2e-az-NorthSouth
+    #         operator: In
+    #         values:
+    #         - e2e-az-North
+    #         - e2e-az-South
+
+provisioner:
+  # These values map directly to yaml in the deployment spec, see the kubernetes docs for info
+  nodeSelector: {}
+    # disktype: ssd
+  # These values map directly to yaml in the deployment spec, see the kubernetes docs for info
+  tolerations: []
+    # - operator: Exists
+  # These values map directly to yaml in the deployment spec, see the kubernetes docs for info
+  affinity: {}
+    # nodeAffinity:
+    #   requiredDuringSchedulingIgnoredDuringExecution:
+    #     nodeSelectorTerms:
+    #     - matchExpressions:
+    #       - key: e2e-az-NorthSouth
+    #         operator: In
+    #         values:
+    #         - e2e-az-North
+    #         - e2e-az-South
