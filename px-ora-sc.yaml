@@ -4,6 +4,6 @@ metadata:
     name: px-ora-sc
 provisioner: kubernetes.io/portworx-volume
 parameters:
-   repl: "1"
+   repl: "3"
    io_profile: "db"
    priority_io: "high"

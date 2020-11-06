@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: 19c
+spec:
+  containers:
+    - name: 19c
+      image: container-registry.oracle.com/database/enterprise:latest
+      imagePullPolicy: Always
+      ports:
+      - name: nginx
+        containerPort: 8080
+        protocol: TCP
+  imagePullSecrets:
+    - name: regcred   
