@@ -25,7 +25,7 @@ $ kubectl apply -f <mainfest>.yaml -n oracle-namespace
 
 ## Authors
 
-Ron Ekins, Oracle Solutions Architect at Pure Storage
+Ron Ekins, Principal Solutions Architect, Office of the CTO at Pure Storage
 
 Oracle ACE Director
 
@@ -40,6 +40,8 @@ Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 
 ## Link(s)
 
+Oracle 19c on Kubernetes and Portworx storage (https://ronekins.com/2020/11/06/oracle-database-19c-on-kubernetes-with-portworx-storage/)
+
 Using Oracle Docker Images (https://ronekins.com/2020/05/14/how-to-use-oracle-database-docker-images-with-kubernetes/)
 
 Oracle 19c on NFS (https://ronekins.com/2020/05/19/oracle-19c-on-kubernetes-using-nfs-persistent-storage/)
@@ -53,3 +55,5 @@ Oracle Docker GitHub Repo (https://github.com/oracle/docker-images)
 MicroK8s (https://microk8s.io)
 
 Kubernetes CSI Docs (https://kubernetes-csi.github.io/docs/)
+
+Portworx Docs (https://docs.portworx.com/)
