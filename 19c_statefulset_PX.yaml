@@ -8,6 +8,11 @@ parameters:
    io_profile: "db"
    priority_io: "high"
 ---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: oracle-namespace
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
