@@ -1,3 +1,13 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1beta1
+metadata:
+    name: px-ora-sc
+provisioner: kubernetes.io/portworx-volume
+parameters:
+   repl: "3"
+   io_profile: "db"
+   priority_io: "high"
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -25,7 +35,9 @@ spec:
       volumes:
          - name: dshm
            emptyDir:
-             medium: Memory  
+             medium: Memory
+      imagePullSecrets:
+        - name: regcred 
       containers:
         - name: oracle19c
           image: container-registry.oracle.com/database/enterprise:19.3.0.0
@@ -72,8 +84,6 @@ spec:
                 configMapKeyRef:
                   name: oradb #Read from a configmap called oradb
                   key: ORACLE_CHARACTERSET #Read the key call ORACLE_CHARACTERSET
-      imagePullSecrets:
-        - name: regcred 
   volumeClaimTemplates:
   - metadata:
       name: ora-startup193 
