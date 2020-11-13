@@ -7,3 +7,4 @@ parameters:
    repl: "3"
    io_profile: "db"
    priority_io: "high"
+allowVolumeExpansion: true
