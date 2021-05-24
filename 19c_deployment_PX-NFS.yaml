@@ -1,0 +1,177 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: px-ora-sc-nfs
+provisioner: kubernetes.io/portworx-volume
+parameters:
+  proxy_endpoint: "nfs://10.225.113.166"
+  proxy_nfs_exportpath: "/z-k8-pstg"
+  mount_options: "rw,bg,hard,nointr,tcp,vers=3,timeo=600,actimeo=0"
+allowVolumeExpansion: true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oracle19c-nfs
+  namespace: oracle-namespace
+  labels:
+    app: database
+    version: 19.3.0.1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: database
+      version: 19.3.0.1
+  template:
+    metadata:
+      name: oracle19c-nfs
+      labels:
+        app: database
+        version: 19.3.0.1
+    spec:
+      volumes:
+         - name: dshm
+           emptyDir:
+             medium: Memory  
+         - name: ora-startup193-nfs
+           persistentVolumeClaim:
+             claimName: ora-setup193-nfs
+         - name: ora-setup193-nfs
+           persistentVolumeClaim:
+             claimName: ora-startup193-nfs
+         - name: ora-data193-nfs
+           persistentVolumeClaim:
+             claimName: ora-data193-nfs
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: oracle19c-nfs
+          image: container-registry.oracle.com/database/enterprise:latest
+          command:
+          - /opt/oracle/runOracle.sh
+          - chown root /opt/oracle/product/19c/dbhome_1/bin/oradmin
+          - chmod 4755 /opt/oracle/product/19c/dbhome_1/bin/oradmin
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 2Gi
+          ports:
+            - name: listener
+              containerPort: 1521
+              hostPort: 1521
+            - name: oemexpress
+              containerPort: 5500
+              hostPort: 5500
+          volumeMounts:
+            - name: dshm
+              mountPath: "/dev/shm"
+            - name: ora-setup193-nfs
+              mountPath: "/opt/oracle/scripts/setup"
+            - name: ora-startup193-nfs
+              mountPath: "/opt/oracle/scripts/startup"
+            - name: ora-data193-nfs
+              mountPath: "/opt/oracle/oradata"
+          env:
+            - name: ORACLE_SID
+              valueFrom:
+                configMapKeyRef:
+                  name: oradb #Read from a configmap called oradb
+                  key: ORACLE_SID #Read the key call ORACLE_SID
+            - name: ORACLE_PDB
+              valueFrom:
+                configMapKeyRef:
+                  name: oradb #Read from a configmap called oradb
+                  key: ORACLE_PDB #Read the key call ORACLE_PDB
+            - name: ORACLE_PWD
+              valueFrom:
+                configMapKeyRef:
+                  name: oradb #Read from a configmap called oradb
+                  key: ORACLE_PWD #Read the key call ORACLE_PWD
+            - name: ORACLE_CHARACTERSET
+              valueFrom:
+                configMapKeyRef:
+                  name: oradb #Read from a configmap called oradb
+                  key: ORACLE_CHARACTERSET #Read the key call ORACLE_CHARACTERSET
+            - name: ORACLE_EDITION
+              valueFrom:
+                configMapKeyRef:
+                  name: oradb #Read from a configmap called oradb
+                  key: ORACLE_EDITION #Read the key call ORACLE_EDITION
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ora-data193-nfs
+  annotations:
+    px/proxy-nfs-subpath: "/oradata"
+  labels:
+    app: database
+    version: 19.3.0.1
+spec:
+  storageClassName: px-ora-sc-nfs
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 100Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ora-setup193-nfs
+  annotations:
+    px/proxy-nfs-subpath: "/setup"
+  labels:
+    app: database
+    version: 19.3.0.1
+spec:
+  storageClassName: px-ora-sc-nfs
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ora-startup193-nfs
+  annotations:
+    px/proxy-nfs-subpath: "/startup"
+  labels:
+    app: database
+    version: 19.3.0.1
+spec:
+  storageClassName: px-ora-sc-nfs
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: oracle19c-nfs
+  namespace: oracle-namespace
+  labels:
+    app: database
+    version: 19.3.0.1
+spec:
+  selector:
+    app: database
+    version: 19.3.0.1
+  type: NodePort
+  ports:
+  - name: listener
+    protocol: TCP
+    port: 1521
+    targetPort: 1521
+  - name: oemexpress
+    protocol: TCP
+    port: 5500
+    targetPort: 5500
