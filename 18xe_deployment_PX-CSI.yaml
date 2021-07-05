@@ -1,0 +1,150 @@
+# Create Portworx CSI StorageClass
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+    name: px-ora-csi-sc
+provisioner: pxd.portworx.com
+parameters:
+   repl: "1"
+allowVolumeExpansion: true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oracle18xe 
+  namespace: oracle-namespace
+  labels:
+    app: database
+    version: 18.4.0.1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: database
+      version: 18.4.0.1
+  template:
+    metadata:
+      name: oracle18xe
+      labels:
+        app: database
+        version: 18.4.0.1
+    spec:
+      securityContext:
+        fsGroup: 54321
+      volumes:
+         - name: dshm
+           emptyDir:
+             medium: Memory
+         - name: ora-data184
+           persistentVolumeClaim:
+             claimName: ora-data184-claim
+         - name: ora-startup184
+           persistentVolumeClaim:
+             claimName: ora-setup184-claim
+         - name: ora-setup184
+           persistentVolumeClaim:
+             claimName: ora-startup184-claim
+      containers:
+        - name: oracle18xe
+          image: 10.225.115.68:5000/oracledb:18.4.0-xe
+          command:
+          - /opt/oracle/runOracle.sh
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 4Gi
+          ports:
+            - name: listener
+              containerPort: 1521
+              hostPort: 1521
+            - name: oemexpress
+              containerPort: 5500
+              hostPort: 5500
+          volumeMounts:
+            - name: dshm
+              mountPath: "/dev/shm"
+            - name: ora-data184
+              mountPath: "/opt/oracle/oradata"
+            - name: ora-setup184
+              mountPath: "/opt/oracle/scripts/setup"
+            - name: ora-startup184
+              mountPath: "/opt/oracle/scripts/startup"
+          env:
+            - name: ORACLE_PWD
+              valueFrom:
+                configMapKeyRef:
+                  name: oradb #Read from a configmap called oradb
+                  key: ORACLE_PWD #Read the key call ORACLE_PWD
+            - name: ORACLE_CHARACTERSET
+              valueFrom:
+                configMapKeyRef:
+                  name: oradb #Read from a configmap called oradb
+                  key: ORACLE_CHARACTERSET #Read the key call ORACLE_CHARACTERSET
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ora-data184-claim
+  labels:
+    app: database
+    version: 18.4.0.1
+spec:
+  storageClassName: px-ora-csi-sc
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ora-setup184-claim
+  labels:
+    app: database
+    version: 18.4.0.1
+spec:
+  storageClassName: px-ora-csi-sc
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+     storage: 1Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ora-startup184-claim
+  labels:
+    app: database
+    version: 18.4.0.1
+spec:
+  storageClassName: px-ora-csi-sc
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: oracle18xe
+  namespace: oracle-namespace
+  labels:
+    app: database
+    version: 18.4.0.1
+spec:
+  selector:
+    app: database
+    version: 18.4.0.1
+  type: NodePort
+  ports:
+  - name: listener
+    protocol: TCP
+    port: 1521
+    targetPort: 1521
+  - name: oemexpress
+    protocol: TCP
+    port: 5500
+    targetPort: 5500
