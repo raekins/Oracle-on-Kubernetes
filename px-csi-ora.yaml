@@ -1,0 +1,10 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: px-csi-ora
+provisioner: pxd.portworx.com
+parameters:
+  repl: "3"
+  io_profile: "auto"
+  priority_io: "high"
+allowVolumeExpansion: true
